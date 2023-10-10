@@ -24,11 +24,9 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.Author", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -61,14 +59,12 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.Blog", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AuthorId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("body")
                         .IsRequired()
@@ -97,11 +93,14 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.BlogTag", b =>
                 {
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("TagId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("BlogId", "TagId");
 
@@ -112,21 +111,19 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.Comment", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("BlogId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("BlogId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("date")
                         .HasColumnType("datetime2");
@@ -142,11 +139,9 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.Tag", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("TagName")
                         .IsRequired()
@@ -159,11 +154,9 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -199,13 +192,13 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.BlogTag", b =>
                 {
-                    b.HasOne("BlogApp.Models.Tag", "Tag")
+                    b.HasOne("BlogApp.Models.Blog", "Blog")
                         .WithMany("BlogTags")
                         .HasForeignKey("BlogId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogApp.Models.Blog", "Blog")
+                    b.HasOne("BlogApp.Models.Tag", "Tag")
                         .WithMany("BlogTags")
                         .HasForeignKey("TagId")
                         .OnDelete(DeleteBehavior.Cascade)

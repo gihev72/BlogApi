@@ -34,7 +34,7 @@ namespace BlogApp.Controllers
         [HttpGet("{commentId}")]
         [ProducesResponseType(200, Type = typeof(Comment))]
         [ProducesResponseType(400)]
-        public IActionResult GetComment(int commentId)
+        public IActionResult GetComment(Guid commentId)
         {
             if (_commentRepository.CommentExist(commentId))
                 return NotFound();
@@ -47,7 +47,7 @@ namespace BlogApp.Controllers
         [HttpGet("blog/{blogId}")]
         [ProducesResponseType(200, Type = typeof(Comment))]
         [ProducesResponseType(400)]
-        public IActionResult GetCommentsOfABlog(int blogId)
+        public IActionResult GetCommentsOfABlog(Guid blogId)
         {
             var comments = _mapper.Map<List<CommentDto>>(_commentRepository.GetCommentsOfABlog(blogId));
             if(!ModelState.IsValid)
@@ -58,7 +58,7 @@ namespace BlogApp.Controllers
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
-        public IActionResult CreateComment([FromQuery] int userId, [FromQuery] int blogId, [FromBody] CreateCommentDto commentCreate)
+        public IActionResult CreateComment([FromQuery] Guid userId, [FromQuery] Guid blogId, [FromBody] CreateCommentDto commentCreate)
         {
             if(commentCreate == null)
                 return BadRequest(ModelState);
@@ -76,6 +76,80 @@ namespace BlogApp.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok("Successfuly Created");
+        }
+
+        [HttpPut("{commentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateComment(Guid commentId, [FromBody] CreateCommentDto updateComment)
+        {
+            if(updateComment == null)
+                return BadRequest(ModelState);
+
+            if(commentId != updateComment.Id)
+                return BadRequest(ModelState);
+
+            if (!_commentRepository.CommentExist(commentId))
+                return NotFound();
+            
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var commentMap = _mapper.Map<Comment>(updateComment);
+            commentMap.date = DateTime.Now;
+
+            if (!_commentRepository.UpdateComment(commentMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating comment");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+
+        }
+
+        [HttpDelete("{commentId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteComment(Guid commentId)
+        {
+            if (!_commentRepository.CommentExist(commentId)) return NotFound();
+
+            var commentToDelete = _commentRepository.GetComment(commentId);
+
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (!_commentRepository.DeleteComment(commentToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting comment");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
+
+        }
+
+        [HttpDelete("/DeleteCommentsByUser/{userId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteCommentsByUser(Guid userId)
+        {
+           if(!_userRepository.UserExist(userId)) return NotFound();
+
+           var conmmentsToDelete = _userRepository.GetCommentsByUser(userId).ToList();
+
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (!_commentRepository.DeleteComments(conmmentsToDelete))
+            {
+                ModelState.AddModelError("", "error deleting comments");
+                return StatusCode(500, ModelState);
+            }
+
+            return NoContent();
         }
 
 

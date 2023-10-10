@@ -12,7 +12,7 @@ namespace BlogApp.Repository
         {
             _context = context;
         }
-        public bool CommentExist(int commentId)
+        public bool CommentExist(Guid commentId)
         {
            return _context.Comments.Any(c => c.Id ==  commentId);
         }
@@ -23,7 +23,19 @@ namespace BlogApp.Repository
             return Save();
         }
 
-        public Comment GetComment(int commentId)
+        public bool DeleteComment(Comment comment)
+        {
+            _context.Remove(comment);
+            return Save();
+        }
+
+        public bool DeleteComments(List<Comment> comments)
+        {
+            _context.RemoveRange(comments);
+            return Save();
+        }
+
+        public Comment GetComment(Guid commentId)
         {
             return _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
         }
@@ -33,7 +45,7 @@ namespace BlogApp.Repository
             return _context.Comments.ToList();
         }
 
-        public ICollection<Comment> GetCommentsOfABlog(int blogId)
+        public ICollection<Comment> GetCommentsOfABlog(Guid blogId)
         {
             return _context.Comments.Where(c => c.Blog.Id ==  blogId).ToList();
         }
@@ -42,6 +54,12 @@ namespace BlogApp.Repository
         {
             var saved = _context.SaveChanges();
             return saved > 0 ? true : false;
+        }
+
+        public bool UpdateComment(Comment comment)
+        {
+            _context.Update(comment);
+            return Save();
         }
     }
 }

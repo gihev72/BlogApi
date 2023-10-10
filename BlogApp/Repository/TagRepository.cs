@@ -2,6 +2,7 @@
 using BlogApp.Data;
 using BlogApp.Interfaces;
 using BlogApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogApp.Repository
 {
@@ -20,12 +21,18 @@ namespace BlogApp.Repository
             return Save();
         }
 
-        public ICollection<Blog> GetBlogsByTag(int tagId)
+        public bool DeleteTag(Tag tag)
+        {
+            _context.Remove(tag);
+            return Save();
+        }
+
+        public ICollection<Blog> GetBlogsByTag(Guid tagId)
         {
             return _context.BlogTags.Where(t => t.TagId == tagId).Select(b => b.Blog).ToList();
         }
 
-        public Tag GetTag(int id)
+        public Tag GetTag(Guid id)
         {
            return _context.Tags.Where(t => t.Id == id).FirstOrDefault();
         }
@@ -41,9 +48,15 @@ namespace BlogApp.Repository
             return saved > 0 ? true : false;
         }
 
-        public bool TagExist(int tagId)
+        public bool TagExist(Guid tagId)
         {
             return _context.Tags.Any(t => t.Id == tagId);
+        }
+
+        public bool UpdateTag(Tag tag)
+        {
+            _context.Update(tag);
+            return Save();
         }
     }
 }

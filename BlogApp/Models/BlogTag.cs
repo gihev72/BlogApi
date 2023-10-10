@@ -2,8 +2,9 @@
 {
     public class BlogTag
     {
-        public int BlogId { get; set; }
-        public int TagId { get; set; }
+        public Guid Id { get; set; }
+        public Guid BlogId { get; set; }
+        public Guid TagId { get; set; }
         public Blog Blog { get; set; }
         public Tag Tag { get; set; }
     }

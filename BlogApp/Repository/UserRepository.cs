@@ -19,7 +19,18 @@ namespace BlogApp.Repository
             return Save();
         }
 
-        public User GetUser(int userId)
+        public bool DeleteUser(User user)
+        {
+            _context.Remove(user);
+            return Save();
+        }
+
+        public ICollection<Comment> GetCommentsByUser(Guid userId)
+        {
+            return _context.Comments.Where(c => c.User.Id == userId).ToList();
+        }
+
+        public User GetUser(Guid userId)
         {
             return _context.Users.FirstOrDefault(u => u.Id == userId);
         }
@@ -35,7 +46,13 @@ namespace BlogApp.Repository
             return saved > 0 ? true : false;
         }
 
-        public bool UserExist(int userId)
+        public bool UpdateUser(User user)
+        { 
+            _context.Update(user);
+            return Save();
+        }
+
+        public bool UserExist(Guid userId)
         {
             return _context.Users.Any(u => u.Id == userId);
         }

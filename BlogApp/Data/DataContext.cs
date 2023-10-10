@@ -23,11 +23,11 @@ namespace BlogApp.Data
             modelBuilder.Entity<BlogTag>()
                 .HasOne(b => b.Blog)
                 .WithMany(bt => bt.BlogTags)
-                .HasForeignKey(t => t.TagId);
+                .HasForeignKey(t => t.BlogId);
             modelBuilder.Entity<BlogTag>()
                 .HasOne(t => t.Tag)
                 .WithMany(bt => bt.BlogTags)
-                .HasForeignKey(b => b.BlogId);
+                .HasForeignKey(b => b.TagId);
         }
 
     }

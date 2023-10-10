@@ -36,7 +36,7 @@ namespace BlogApp.Controllers
         [HttpGet("{tagId}")]
         [ProducesResponseType(200, Type = typeof(Tag))]
         [ProducesResponseType(400)]
-        public IActionResult GetTag(int tagId)
+        public IActionResult GetTag(Guid tagId)
         {
             if (!_tagRepository.TagExist(tagId))
             {
@@ -53,7 +53,7 @@ namespace BlogApp.Controllers
         [HttpGet("blog/tagId")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<Blog>))]
         [ProducesResponseType(400)]
-        public IActionResult GetBlogByTagId(int tagId)
+        public IActionResult GetBlogByTagId(Guid tagId)
         {
             var blogs = _mapper.Map<List<BlogDto>>(
                 _tagRepository.GetBlogsByTag(tagId));
@@ -86,6 +86,50 @@ namespace BlogApp.Controllers
                 return StatusCode(500, ModelState);
             }
             return Ok(" Successfuly Created");
+        }
+
+        [HttpPut("{tagId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult UpdateTag(Guid tagId, [FromBody]TagDto updateTag) 
+        {
+            if (updateTag == null) return BadRequest(ModelState);
+
+            if (tagId != updateTag.Id) return BadRequest(ModelState);
+
+            if (!_tagRepository.TagExist(tagId)) return NotFound();
+
+            if (!ModelState.IsValid) return BadRequest();
+
+            var tagMap = _mapper.Map<Tag>(updateTag);
+
+            if (!_tagRepository.UpdateTag(tagMap))
+            {
+                ModelState.AddModelError("", "Something went wrong updating tag");
+                return BadRequest(ModelState);
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{tagId}")]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
+        public IActionResult DeleteTag(Guid tagId)
+        {
+            if (!_tagRepository.TagExist(tagId)) return NotFound();
+
+            var tgToDelete = _tagRepository.GetTag(tagId);
+
+            if(!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (!_tagRepository.DeleteTag(tgToDelete))
+            {
+                ModelState.AddModelError("", "Something went wrong deleting tag");
+                return StatusCode(500, ModelState);
+            }
+            return NoContent();
         }
     }
 }
