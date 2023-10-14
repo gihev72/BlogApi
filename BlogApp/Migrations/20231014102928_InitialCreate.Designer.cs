@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231010081630_InitialCreate")]
+    [Migration("20231014102928_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -24,41 +24,6 @@ namespace BlogApp.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("BlogApp.Models.Author", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ProfileImage")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Author");
-                });
 
             modelBuilder.Entity("BlogApp.Models.Blog", b =>
                 {
@@ -177,6 +142,20 @@ namespace BlogApp.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("profileImgUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -184,7 +163,7 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.Blog", b =>
                 {
-                    b.HasOne("BlogApp.Models.Author", "Author")
+                    b.HasOne("BlogApp.Models.User", "Author")
                         .WithMany("Blogs")
                         .HasForeignKey("AuthorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -223,17 +202,12 @@ namespace BlogApp.Migrations
                     b.HasOne("BlogApp.Models.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Blog");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("BlogApp.Models.Author", b =>
-                {
-                    b.Navigation("Blogs");
                 });
 
             modelBuilder.Entity("BlogApp.Models.Blog", b =>
@@ -250,6 +224,8 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Models.User", b =>
                 {
+                    b.Navigation("Blogs");
+
                     b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618

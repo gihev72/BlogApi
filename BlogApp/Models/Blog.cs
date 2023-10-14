@@ -8,8 +8,8 @@
         public string body { get; set; }
         public DateTime createdAt { get; set; }
         public DateTime updatedAt { get; set; }
-        public ICollection<Comment> comments { get; set; }
-        public Author Author { get; set; }
+        public ICollection<Comment>? comments { get; set; }
+        public User Author { get; set; }
         public ICollection<BlogTag> BlogTags { get; set; }
 
     }

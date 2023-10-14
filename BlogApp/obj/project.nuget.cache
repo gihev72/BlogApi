@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "9jX6+onD9bEsQBXhEAij+mcW5yF1u6j29a+ZP0KvW9UjVIXldiRzuM6scyRfIUk7Rw+7vlIJn1FTGSYrXEsRMw==",
+  "dgSpecHash": "lWeiEgg6xZDW3V0x017fh6sq3gP/goPTTVeEJiUq4acc74vZrvlLqS86xQMcud3GJhCynhxONmCXu1kHIWBFng==",
   "success": true,
   "projectFilePath": "C:\\Users\\Mohsen\\Documents\\ASP_API\\BlogApp\\BlogApp\\BlogApp.csproj",
   "expectedPackageFiles": [
@@ -8,7 +8,9 @@
     "C:\\Users\\Mohsen\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\Mohsen\\.nuget\\packages\\azure.core\\1.25.0\\azure.core.1.25.0.nupkg.sha512",
     "C:\\Users\\Mohsen\\.nuget\\packages\\azure.identity\\1.7.0\\azure.identity.1.7.0.nupkg.sha512",
+    "C:\\Users\\Mohsen\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Mohsen\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\Mohsen\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.12\\microsoft.aspnetcore.authentication.jwtbearer.7.0.12.nupkg.sha512",
     "C:\\Users\\Mohsen\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.10\\microsoft.aspnetcore.openapi.7.0.10.nupkg.sha512",
     "C:\\Users\\Mohsen\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Mohsen\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",

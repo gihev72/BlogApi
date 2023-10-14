@@ -11,7 +11,7 @@ namespace BlogApp.Data
         }
         public DbSet<Tag> Tags { get; set; }
         public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Author> Author { get; set; }
+        // public DbSet<Author> Author { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<BlogTag> BlogTags { get; set; }
@@ -28,7 +28,12 @@ namespace BlogApp.Data
                 .HasOne(t => t.Tag)
                 .WithMany(bt => bt.BlogTags)
                 .HasForeignKey(b => b.TagId);
-        }
+
+            modelBuilder.Entity<Comment>()
+            .HasOne(c => c.User)
+            .WithMany(u => u.Comments)
+            .OnDelete(DeleteBehavior.Restrict);
+                }
 
     }
 }

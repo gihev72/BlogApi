@@ -76,3 +76,5 @@ C:\Users\Mohsen\Documents\ASP_API\BlogApp\BlogApp\obj\Debug\net7.0\BlogApp.genru
 C:\Users\Mohsen\Documents\ASP_API\BlogApp\BlogApp\obj\Debug\net7.0\ref\BlogApp.dll
 C:\Users\Mohsen\Documents\ASP_API\BlogApp\BlogApp\bin\Debug\net7.0\AutoMapper.dll
 C:\Users\Mohsen\Documents\ASP_API\BlogApp\BlogApp\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\Mohsen\Documents\ASP_API\BlogApp\BlogApp\bin\Debug\net7.0\BCrypt.Net-Next.dll
+C:\Users\Mohsen\Documents\ASP_API\BlogApp\BlogApp\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

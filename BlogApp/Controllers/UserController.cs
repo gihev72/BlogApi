@@ -2,6 +2,8 @@
 using BlogApp.Dto;
 using BlogApp.Interfaces;
 using BlogApp.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogApp.Controllers
@@ -21,6 +23,7 @@ namespace BlogApp.Controllers
 
         [HttpGet]
         [ProducesResponseType(200, Type = typeof(IEnumerable<User>))]
+        [Authorize]
         public IActionResult GetUsers()
         {
             var users = _mapper.Map<List<UserDto>>(_userRepository.GetUsers());
@@ -69,8 +72,10 @@ namespace BlogApp.Controllers
                 return StatusCode(422, ModelState);
             }
             var userMap = _mapper.Map<User>(userCreate);
-            // Password should be Hashed.
-            userMap.Password = "hashedPassword";
+
+            // hashing password
+            userMap.Password = BCrypt.Net.BCrypt.HashPassword(userCreate.Password);
+
             if (!_userRepository.CreateUser(userMap))
             {
                 ModelState.AddModelError("", "Something went wrong while saving!");
@@ -135,6 +140,25 @@ namespace BlogApp.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost("login")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        public IActionResult LoginUser([FromBody] UserLoginDto userLogin)
+
+        {
+            var foundUser = _userRepository.GetUserByUsername(userLogin.Username);
+            if(foundUser == null)
+                return BadRequest("Useranem or password is not correct!");
+
+            if(!BCrypt.Net.BCrypt.Verify(userLogin.Password, foundUser.Password))
+                return BadRequest("Useranem or password is not correct!");
+
+            string Token = _userRepository.CreateToken(foundUser);
+
+            return Ok(Token);
+
         }
 
 

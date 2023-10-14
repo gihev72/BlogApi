@@ -1,16 +1,43 @@
-﻿using BlogApp.Data;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using BlogApp.Data;
 using BlogApp.Interfaces;
 using BlogApp.Models;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BlogApp.Repository
 {
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly IConfiguration _configuration;
 
-        public UserRepository(DataContext context)
+        public UserRepository(DataContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
+        }
+
+        public string CreateToken(User user)
+        {
+            List<Claim> claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, user.Username)
+            };
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("AppSetting:AccessToken").Value!));
+            var cred = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
+
+            var Token = new JwtSecurityToken
+                (
+                    claims: claims,
+                   expires: DateTime.Now.AddHours(1),
+                   signingCredentials: cred
+                );
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(Token);
+
+            return jwt;
         }
 
         public bool CreateUser(User user)
@@ -33,6 +60,11 @@ namespace BlogApp.Repository
         public User GetUser(Guid userId)
         {
             return _context.Users.FirstOrDefault(u => u.Id == userId);
+        }
+
+        public User GetUserByUsername(string username)
+        {
+            return _context.Users.FirstOrDefault(u => u.Username == username);
         }
 
         public ICollection<User> GetUsers()

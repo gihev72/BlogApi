@@ -19,7 +19,7 @@ namespace BlogApp.Repository
 
         public bool CreateBlog( Guid tagId,Guid authorId , Blog blog)
         {
-            var author = _context.Author.Where(a => a.Id == authorId).FirstOrDefault();
+            var author = _context.Users.Where(a => a.Id == authorId).FirstOrDefault();
             blog.Author = author;
             var tag = _context.Tags.Where(t => t.Id == tagId).FirstOrDefault();
             var blogTag = new BlogTag()

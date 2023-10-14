@@ -11,14 +11,14 @@ namespace BlogApp.Controllers
     public class BlogsController : Controller
     {
         private readonly IBlogRepository _blogRepository;
-        private readonly IAuthorRepository _authorRepository;
+        //private readonly IAuthorRepository _authorRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly IMapper _mapper;
 
-        public BlogsController(IBlogRepository blogRepository,IAuthorRepository authorRepository,ICommentRepository commentRepository, IMapper mapper)
+        public BlogsController(IBlogRepository blogRepository,ICommentRepository commentRepository, IMapper mapper)
         {
             _blogRepository = blogRepository;
-            _authorRepository = authorRepository;
+            //_authorRepository = authorRepository;
             _commentRepository = commentRepository;
             _mapper = mapper;
         }
