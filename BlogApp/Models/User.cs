@@ -11,6 +11,7 @@
         public string Username { get; set; }
         public string Role { get; set; } = "user";
         public string? RefreshToken { get; set; }
+        public DateTime? TokenExpires { get; set; }
         public ICollection<Comment>? Comments { get; set; }
         public ICollection<Blog>? Blogs { get; set; }
     }

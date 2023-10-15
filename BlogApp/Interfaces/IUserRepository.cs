@@ -1,4 +1,5 @@
-﻿using BlogApp.Models;
+﻿using System.Security.Claims;
+using BlogApp.Models;
 
 namespace BlogApp.Interfaces
 {
@@ -14,6 +15,9 @@ namespace BlogApp.Interfaces
         bool DeleteUser(User user);
         bool Save();
         string CreateToken(User user);
+        RefreshToken GenerateRefreshToken();
+        bool SetRefreshToken(User user,RefreshToken refreshToken);
+        ClaimsPrincipal GetPrincipalFromExpiredToken (string  token);
 
 
     }

@@ -156,9 +156,55 @@ namespace BlogApp.Controllers
                 return BadRequest("Useranem or password is not correct!");
 
             string Token = _userRepository.CreateToken(foundUser);
+            var newRefreshToken = _userRepository.GenerateRefreshToken();
+            SetRefreshToken(newRefreshToken);
+            if (!_userRepository.SetRefreshToken(foundUser, newRefreshToken))
+                return BadRequest(ModelState);
 
             return Ok(Token);
 
+        }
+
+        [HttpPost("refresh-token")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
+        public IActionResult RefreshToken([FromBody] TokenDto accessToken) 
+        {
+            var principal = _userRepository.GetPrincipalFromExpiredToken(accessToken.Token);
+            var refreshToken = Request.Cookies["refreshToken"];
+
+            if (principal?.Identity?.Name is null)
+                return Unauthorized();
+
+            var user = _userRepository.GetUserByUsername((principal.Identity.Name));
+
+            if (user is null || user.RefreshToken != refreshToken || user.TokenExpires < DateTime.UtcNow)
+                return Unauthorized();
+
+            var token = _userRepository.CreateToken(user);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return Ok(token);
+
+
+        }
+
+
+
+
+
+
+        private void SetRefreshToken( RefreshToken refreshToken )
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.Expires,
+
+            };
+            Response.Cookies.Append("refreshToken", refreshToken.Token, cookieOptions);
         }
 
 
